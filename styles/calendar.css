@@ -1,0 +1,133 @@
+
+
+article {
+    max-width: 1100px;
+    margin: 40px auto;
+    padding: 20px;
+}
+
+article h2 {
+    text-align: center;
+    margin-bottom: 20px;
+    font-size: 2.2rem;
+}
+
+/* Table base */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    background: white;
+    border-radius: 20px;
+    overflow: hidden;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+}
+
+/* Caption (January 2026) */
+caption {
+    caption-side: top;
+    font-size: 1.8rem;
+    font-weight: bold;
+    padding: 15px;
+    color: #AC9359;
+}
+
+/* Weekdays header */
+thead th {
+    background-color: #AC9359;
+    color: white;
+    text-align: center;
+    padding: 15px 0;
+    font-size: 1.1rem;
+}
+
+/* Calendar cells */
+tbody td {
+    vertical-align: top;
+    border: 1px solid #eee;
+    height: 140px;
+    padding: 8px;
+    position: relative;
+}
+
+/* Day number */
+tbody td h1 {
+    font-size: 1.4rem;
+    margin: 0 0 5px 0;
+    color: #AC9359;
+}
+
+/* =========================
+   ORDERS STYLING
+========================= */
+
+/* Base order text */
+tbody td p {
+    font-size: 0.85rem;
+    margin: 3px 0;
+    padding: 4px 6px;
+    border-radius: 6px;
+    line-height: 1.2;
+}
+
+/* Dine In */
+.dine_in {
+    background-color: rgba(172, 147, 89, 0.15);
+    border-left: 4px solid #AC9359;
+}
+
+/* Dine Out */
+.dine_out {
+    background-color: rgba(0, 0, 0, 0.05);
+    border-left: 4px solid #555;
+}
+
+/* =========================
+   FOOTER LEGEND
+========================= */
+
+/* Calendar legend */
+
+.calendar-legend {
+    text-align: center;
+    padding: 18px;
+    font-size: 0.9rem;
+    background: none;
+}
+
+.calendar-legend span {
+    margin: 0 8px;
+}
+
+/* Legend indicators */
+.legend-in {
+    color: #AC9359;
+    font-weight: bold;
+}
+
+.legend-out {
+    color: #777;
+    font-weight: bold;
+}
+
+.legend-divider {
+    color: #ccc;
+}
+
+
+/* =========================
+   RESPONSIVE
+========================= */
+
+@media (max-width: 768px) {
+    tbody td {
+        height: auto;
+    }
+
+    tbody td h1 {
+        font-size: 1.2rem;
+    }
+
+    tbody td p {
+        font-size: 0.75rem;
+    }
+}

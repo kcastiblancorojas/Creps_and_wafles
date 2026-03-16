@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="styles/bootstrap.css">
+    <link rel="stylesheet" href="styles/style.css">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Indie+Flower&display=swap" rel="stylesheet">
+<script src="index.js"></script>
+    <title>Crepes & Waffles</title>
+</head>
+<body>
+    <nav class="navbar navbar-expand-md navbar-light bg-light  px-xl-5 px-2">
+        <a class="navbar-brand" href="index.html">
+            <img src="images/crepes_logo.png" alt="logo" width="140" height="110"> <span><b> Crepes & Waffles
+                    </b></span>
+        </a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse justify-content-xl-end" id="navbarSupportedContent">
+            <div class="nav-item">
+                <a class="nav-link" href="index.html">Home</a>
+            </div>
+            <div class="nav-item">
+                <a class="nav-link" href="about.html">About</a>
+            </div>
+            
+            <div class="nav-item dropdown">
+                <a 
+                class="nav-link" href="#"> Menu ▾ 
+                </a>
+                <div class="dropdown-menu">
+                    <a class="dropdown-item" href="calendar.html">Calendar</a>
+                    <a class="dropdown-item" href="gallery.html">Gallery</a>
+                    <a class="dropdown-item" href="menulist.html">Menu List</a>
+                </div>
+            </div>
+            <div class="nav-item">
+                <a class="nav-link" href="order.html">Order </a>
+            </div>
+            
+            <div class="nav-item">
+                <a class="nav-link" href="location.html">Location</a>
+            </div>
+
+             <div class="nav-item">
+                <a class="nav-link" href="contact.html">Contact Us</a>
+            </div>
+
+            <div class="nav-item">
+                <a class="nav-link" href="credits.html">Credits</a>
+            </div>
+
+        
+        </div>
+    </nav>
+
+
+
+<div id="order-modal" class="modal-overlay">
+    <div class="modal-box">
+        <h2 >WELCOME TO CREEPS & WAFFLES</h2>
+        <p>Please select your order type to continue:</p>
+        <div class="modal-options">
+            <button onclick="selectOrderType('Dine-In')" class="order-btn">🏠 Dine-In</button>
+            <button onclick="selectOrderType('Take-Away')" class="order-btn">🥡 Take-Away</button>
+        </div>
+    </div>
+</div>
+
+<div class="container">
+    <section class="menu-grid">
+        
+        <div class="menu-card">
+            <div class="image-container"><img src="images/sopa_mexicana.jpg" alt="Mexican Soup"></div>
+            <div class="info-container">
+                <b>MEXICAN CHICKEN SOUP</b>
+              
+                <div class="price-and-qty">
+                    <span class="price">$7.21</span>
+                    <div class="qty-selector">
+                        <button type="button" onclick="changeQty('mexicanSoup', -1)">-</button>
+                        <input type="number" id="mexicanSoup" value="0" readonly>
+                        <button type="button" onclick="changeQty('mexicanSoup', 1)">+</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="menu-card">
+            <div class="image-container"><img src="images/pollo_thai.jpg" alt="Thai Crepe"></div>
+            <div class="info-container">
+                <b>THAI CHICKEN CREPE</b>
+             
+                <div class="price-and-qty">
+                    <span class="price">$11.62</span>
+                    <div class="qty-selector">
+                        <button type="button" onclick="changeQty('thaiChickenCrepe', -1)">-</button>
+                        <input type="number" id="thaiChickenCrepe" value="0" readonly>
+                        <button type="button" onclick="changeQty('thaiChickenCrepe', 1)">+</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="menu-card">
+            <div class="image-container"><img src="images/crepe_stroganof.jpg" alt="Stroganoff"></div>
+            <div class="info-container">
+                <b>STROGANOFF CREPE</b>
+       
+                <div class="price-and-qty">
+                    <span class="price">$12.54</span>
+                    <div class="qty-selector">
+                        <button type="button" onclick="changeQty('stroganoffCrepe', -1)">-</button>
+                        <input type="number" id="stroganoffCrepe" value="0" readonly>
+                        <button type="button" onclick="changeQty('stroganoffCrepe', 1)">+</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="menu-card">
+            <div class="image-container"><img src="images/crepe_monte.jpg" alt="Montes de Maria"></div>
+            <div class="info-container">
+                <b>CREPE MONTES DE MARÍA</b>
+    
+                <div class="price-and-qty">
+                    <span class="price">$9.92</span>
+                    <div class="qty-selector">
+                        <button type="button" onclick="changeQty('crepeMontesDeMaria', -1)">-</button>
+                        <input type="number" id="crepeMontesDeMaria" value="0" readonly>
+                        <button type="button" onclick="changeQty('crepeMontesDeMaria', 1)">+</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="menu-card">
+            <div class="image-container"><img src="images/pita_bosque.jpg" alt="Pita Forest"></div>
+            <div class="info-container">
+                <b>PITA IN THE FOREST</b>
+ 
+                <div class="price-and-qty">
+                    <span class="price">$10.32</span>
+                    <div class="qty-selector">
+                        <button type="button" onclick="changeQty('pitaInTheForest', -1)">-</button>
+                        <input type="number" id="pitaInTheForest" value="0" readonly>
+                        <button type="button" onclick="changeQty('pitaInTheForest', 1)">+</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="menu-card">
+            <div class="image-container"><img src="images/ensalada_valparaiso.jpg" alt="Salad"></div>
+            <div class="info-container">
+                <b>VALPARAÍSO SALAD</b>
+     
+                <div class="price-and-qty">
+                    <span class="price">$15.10</span>
+                    <div class="qty-selector">
+                        <button type="button" onclick="changeQty('valparaisoSalad', -1)">-</button>
+                        <input type="number" id="valparaisoSalad" value="0" readonly>
+                        <button type="button" onclick="changeQty('valparaisoSalad', 1)">+</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="menu-card">
+            <div class="image-container"><img src="images/vainilla_hot.jpg" alt="Vanilla Cup"></div>
+            <div class="info-container">
+                <b>VANILLA HOT CHOCOLATE CUP</b>
+
+                <div class="price-and-qty">
+                    <span class="price">$5.51</span>
+                    <div class="qty-selector">
+                        <button type="button" onclick="changeQty('vanillaHotChocolateCup', -1)">-</button>
+                        <input type="number" id="vanillaHotChocolateCup" value="0" readonly>
+                        <button type="button" onclick="changeQty('vanillaHotChocolateCup', 1)">+</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="menu-card">
+            <div class="image-container"><img src="images/crepe_chocolate.jpg" alt="Chocolate Fondue"></div>
+            <div class="info-container">
+                <b>CHOCOLATE FONDUE CREPE</b>
+
+                <div class="price-and-qty">
+                    <span class="price">$5.14</span>
+                    <div class="qty-selector">
+                        <button type="button" onclick="changeQty('chocolateFondueCrepe', -1)">-</button>
+                        <input type="number" id="chocolateFondueCrepe" value="0" readonly>
+                        <button type="button" onclick="changeQty('chocolateFondueCrepe', 1)">+</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="menu-card">
+            <div class="image-container"><img src="images/waffle_frutos.jpg" alt="Waffle Berries"></div>
+            <div class="info-container">
+                <b>WAFFLE WITH BERRIES</b>
+
+                <div class="price-and-qty">
+                    <span class="price">$5.51</span>
+                    <div class="qty-selector">
+                        <button type="button" onclick="changeQty('waffleWithBerries', -1)">-</button>
+                        <input type="number" id="waffleWithBerries" value="0" readonly>
+                        <button type="button" onclick="changeQty('waffleWithBerries', 1)">+</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="menu-card">
+            <div class="image-container"><img src="images/jugo_frambuesa.jpg" alt="Raspberry"></div>
+            <div class="info-container">
+                <b>RASPBERRY JUICE</b>
+   
+                <div class="price-and-qty">
+                    <span class="price">$3.48</span>
+                    <div class="qty-selector">
+                        <button type="button" onclick="changeQty('raspberryJuice', -1)">-</button>
+                        <input type="number" id="raspberryJuice" value="0" readonly>
+                        <button type="button" onclick="changeQty('raspberryJuice', 1)">+</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="menu-card">
+            <div class="image-container"><img src="images/limonada_mango.jpg" alt="Mango Lemonade"></div>
+            <div class="info-container">
+                <b>MANGO BICHE LEMONADE</b>
+           
+                <div class="price-and-qty">
+                    <span class="price">$3.48</span>
+                    <div class="qty-selector">
+                        <button type="button" onclick="changeQty('mangoBicheLemonade', -1)">-</button>
+                        <input type="number" id="mangoBicheLemonade" value="0" readonly>
+                        <button type="button" onclick="changeQty('mangoBicheLemonade', 1)">+</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="menu-card">
+            <div class="image-container"><img src="images/limonada_hierbabuena.jpg" alt="Mint Lemonade"></div>
+            <div class="info-container">
+                <b>MINT LEMONADE</b>
+     
+                <div class="price-and-qty">
+                    <span class="price">$2.89</span>
+                    <div class="qty-selector">
+                        <button type="button" onclick="changeQty('mintLemonade', -1)">-</button>
+                        <input type="number" id="mintLemonade" value="0" readonly>
+                        <button type="button" onclick="changeQty('mintLemonade', 1)">+</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</div>
+
+<div class="footer-total">
+    <div class="container d-flex justify-content-between align-items-center">
+        <span id="subtotal">Subtotal: $0.00</span>
+        <span id="tax">Tax (13%): $0.00</span>
+        <strong id="estimate">Total: $0.00</strong>
+    </div>
+    <button type="button" class="btn-submit-order" onclick="submitOrder()">
+            Submit Order
+        </button>
+</div>
+<footer class="container-fluid">
+       
+    </footer>
+        <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
+        integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
+        crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
+        integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+        crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
+        integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+        crossorigin="anonymous"></script>
+</body>
+</html>
