@@ -5,71 +5,133 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="styles/bootstrap.css">
     <link rel="stylesheet" href="styles/style.css">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Indie+Flower&display=swap" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Indie+Flower&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="index.js" defer></script>
     <title>Crepes & Waffles</title>
+
+    <style>
+        /* ── Dashboard Toggle Button ─────────────── */
+        #dashboard-toggle-wrapper {
+            text-align: center;
+            padding: 50px 20px 30px;
+        }
+
+        #dashboard-toggle-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 14px;
+            background: transparent;
+            border: 2px solid #AC9359;
+            color: #AC9359;
+            font-family: 'Indie Flower', cursive;
+            font-size: 1.15rem;
+            padding: 14px 40px;
+            border-radius: 60px;
+            cursor: pointer;
+            letter-spacing: 0.04em;
+            transition: background 0.3s, color 0.3s, box-shadow 0.3s;
+            box-shadow: 0 2px 12px rgba(172,147,89,0.10);
+        }
+
+        #dashboard-toggle-btn:hover {
+            background: #AC9359;
+            color: #fff;
+            box-shadow: 0 6px 22px rgba(172,147,89,0.22);
+        }
+
+        /* The small animated chevron icon */
+        #dashboard-toggle-btn .chevron {
+            display: inline-block;
+            width: 18px;
+            height: 18px;
+            border-right: 2px solid currentColor;
+            border-bottom: 2px solid currentColor;
+            transform: rotate(45deg);
+            transition: transform 0.35s ease;
+            margin-bottom: 4px;
+            flex-shrink: 0;
+        }
+
+        #dashboard-toggle-btn.open .chevron {
+            transform: rotate(-135deg);
+            margin-bottom: -4px;
+        }
+
+        /* Collapsible wrapper — hidden by default */
+        #dashboard-collapse {
+            display: none;
+            overflow: hidden;
+        }
+
+        /* Subtitle under the button */
+        #dashboard-toggle-wrapper p {
+            color: #aaa;
+            font-size: 0.88rem;
+            margin-top: 10px;
+            letter-spacing: 0.02em;
+        }
+    </style>
 </head>
 <body>
-    <nav class="navbar navbar-expand-md navbar-light bg-light  px-xl-5 px-2">
+
+    <!-- ── Navbar ───────────────────────────────── -->
+    <nav class="navbar navbar-expand-md navbar-light bg-light px-xl-5 px-2">
         <a class="navbar-brand" href="index.html">
-            <img src="images/crepes_logo.png" alt="logo" width="140" height="110"> <span><b> Crepes & Waffles
-                    </b></span>
+            <img src="images/crepes_logo.png" alt="logo" width="140" height="110">
+            <span><b> Crepes & Waffles</b></span>
         </a>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
             aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
-
         <div class="collapse navbar-collapse justify-content-xl-end" id="navbarSupportedContent">
-            <div class="nav-item">
-                <a class="nav-link" href="index.html">Home</a>
-            </div>
-            <div class="nav-item">
-                <a class="nav-link" href="about.html">About</a>
-            </div>
-            
+            <div class="nav-item"><a class="nav-link" href="index.html">Home</a></div>
+            <div class="nav-item"><a class="nav-link" href="about.html">About</a></div>
             <div class="nav-item dropdown">
-                <a 
-                class="nav-link" href="#"> Menu ▾ 
-                </a>
+                <a class="nav-link" href="#">Menu ▾</a>
                 <div class="dropdown-menu">
                     <a class="dropdown-item" href="calendar.html">Calendar</a>
                     <a class="dropdown-item" href="gallery.html">Gallery</a>
                     <a class="dropdown-item" href="menulist.html">Menu List</a>
+                    <a class="dropdown-item" href="game.html">Game</a>
                 </div>
             </div>
-            <div class="nav-item">
-                <a class="nav-link" href="order.html">Order </a>
-            </div>
-            
-            <div class="nav-item">
-                <a class="nav-link" href="location.html">Location</a>
-            </div>
-
-             <div class="nav-item">
-                <a class="nav-link" href="contact.html">Contact Us</a>
-            </div>
-
-            <div class="nav-item">
-                <a class="nav-link" href="credits.html">Credits</a>
-            </div>
-
-        
+            <div class="nav-item"><a class="nav-link" href="order.html">Order</a></div>
+            <div class="nav-item"><a class="nav-link" href="location.html">Location</a></div>
+            <div class="nav-item"><a class="nav-link" href="contact.html">Contact Us</a></div>
+            <div class="nav-item"><a class="nav-link" href="credits.html">Credits</a></div>
+            <div class="nav-item"><a class="nav-link" href="member.html">Member</a></div>
         </div>
     </nav>
 
+    <!-- ── Weather Widget (below navbar, top-right) ─── -->
+    <div id="weather-widget">
+        <div id="weather-content" style="display:none;">
+            <div id="weather-icon"></div>
+            <div id="weather-info">
+                <span id="weather-city"></span>
+                <span id="weather-temp"></span>
+                <div id="weather-desc"></div>
+            </div>
+        </div>
+        <div id="weather-loading" style="font-size: 10px; opacity: 0.5;">loading...</div>
+    </div>
 
+    <div style="clear:both;"></div>
+
+    <!-- ── Hero Section ──────────────────────────────── -->
     <section class="container-fluid">
         <div class="row">
-            <div class="col-lg-5  d-flex justify-content-center align-items-lg-center">
+            <div class="col-lg-5 d-flex justify-content-center align-items-lg-center">
                 <div>
-
-                    <h3 class="text-center text-md-start px-md-3 mt-xl-0 mt-sm-2 mb-md-4 frontPage">A taste you’ll always come back to
+                    <h3 class="text-center text-md-start px-md-3 mt-xl-0 mt-sm-2 mb-md-4 frontPage">
+                        A taste you'll always come back to
                     </h3>
                     <p class="px-md-3 px">We transform food into art, with the aim of touching hearts and staying in minds. We constantly reinvent ourselves by creating new dishes and combining different ingredients that together form a symphony capable of captivating the most discerning palates and the most ambitious appetites.</p>
                     <div class="d-flex justify-content-lg-start justify-content-center">
-
                         <form style="display: inline" action="menulist.html" method="get">
                             <button class="btn btn-primary btn-lg mx-lg-3 mb-3 btn-custom-gold">See our menu</button>
                         </form>
@@ -78,71 +140,129 @@
             </div>
             <div class="col-lg-7">
                 <img src="images/banner.png" alt="Food Picture" class="img-fluid" id="mainImage">
-                <div class="overlayImage">
+                <div class="overlayImage"></div>
+            </div>
+        </div>
+    </section>
+
+    <br><br><hr>
+
+    <!-- ── Testimonials ──────────────────────────────── -->
+    <section class="container my-5">
+        <div class="row text-center mb-4">
+            <div class="col-12">
+                <h2 class="display-5">What Our Customers Say</h2>
+                <p class="lead text-muted">A moment of tranquility is a promise we always keep.</p>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-4 mb-4">
+                <div class="card h-100 shadow-sm border-0" style="border-top: 5px solid #AC9359;">
+                    <div class="card-body">
+                        <p class="card-text fst-italic">"The food is absolutely amazing! Everything tastes fresh and the flavors are incredible. It's my favorite place to enjoy crepes."</p>
+                    </div>
+                    <div class="card-footer bg-white border-0">
+                        <h3 class="mb-0 text-dark">Rafa A.</h3>
+                        <small class="text-muted">Crepes Enthusiast</small>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4 mb-4">
+                <div class="card h-100 shadow-sm border-0" style="border-top: 5px solid #AC9359;">
+                    <div class="card-body">
+                        <p class="card-text fst-italic">"Great service and a cozy atmosphere. I love how they care about quality and customer experience."</p>
+                    </div>
+                    <div class="card-footer bg-white border-0">
+                        <h3 class="mb-0 text-dark">David S.</h3>
+                        <small class="text-muted">Crepes Enthusiast</small>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4 mb-4">
+                <div class="card h-100 shadow-sm border-0" style="border-top: 5px solid #AC9359;">
+                    <div class="card-body">
+                        <p class="card-text fst-italic">"A perfect place to go with friends or family. The desserts are delicious and beautifully presented."</p>
+                    </div>
+                    <div class="card-footer bg-white border-0">
+                        <h3 class="mb-0 text-dark">Marcus L.</h3>
+                        <small class="text-muted">Crepes Enthusiast</small>
+                    </div>
                 </div>
             </div>
         </div>
     </section>
 
-<br>
-<br>
-<hr>
+    <hr>
 
 
-    
+    <section id="dashboard-section" class="container-fluid">
+        <div class="container">
 
-    <section class="container my-5">
-    <div class="row text-center mb-4">
-        <div class="col-12">
-            <h2 class="display-5" >What Our Customers Say</h2>
-            <p class="lead text-muted">A moment of tranquility is a promise we always keep.</p>
-        </div>
-    </div>
-
-    <div class="row">
-        
-        <div class="col-md-4 mb-4">
-            <div class="card h-100 shadow-sm border-0" style="border-top: 5px solid #AC9359;">
-                <div class="card-body">
-                    <p class="card-text fst-italic">"The food is absolutely amazing! Everything tastes fresh and the
-                flavors are incredible. It’s my favorite place to enjoy crepes."</p>
-                </div>
-                <div class="card-footer bg-white border-0">
-                    <h3 class="mb-0 text-dark">Rafa A.</h3>
-                    <small class="text-muted">Crepes Enthusiast</small>
-                </div>
+            <!-- Toggle button lives OUTSIDE the collapsible area -->
+            <div id="dashboard-toggle-wrapper">
+                <button id="dashboard-toggle-btn" type="button">
+                    <span class="btn-label">View Order Analytics</span>
+                    <span class="chevron"></span>
+                </button>
+                <p>Food order data — linear regression analysis</p>
             </div>
-        </div>
-        <div class="col-md-4 mb-4">
-            <div class="card h-100 shadow-sm border-0" style="border-top: 5px solid #AC9359;">
-                <div class="card-body">
-                    <p class="card-text fst-italic">"Great service and a cozy atmosphere. I love how they care about quality and customer experience."
 
-</p>
-                </div>
-                <div class="card-footer bg-white border-0">
-                    <h3 class="mb-0 text-dark">David S.</h3>
-                    <small class="text-muted">Crepes Enthusiast</small>
-                </div>
-            </div>
-        </div>
+            <!-- Everything below slides open/closed -->
+            <div id="dashboard-collapse">
 
-        <div class="col-md-4 mb-4">
-            <div class="card h-100 shadow-sm border-0" style="border-top: 5px solid #AC9359;">
-                <div class="card-body">
-                    <p class="card-text fst-italic">"A perfect place to go with friends or family. The desserts are delicious and beautifully presented."</p>
+                <div class="row text-center mb-4">
+                    <div class="col-12">
+                        <h2 class="display-5">Food Order Dashboard</h2>
+                        <p class="lead text-muted">Data visualization with linear regression analysis</p>
+                    </div>
                 </div>
-                <div class="card-footer bg-white border-0">
-                    <h3 class="mb-0 text-dark">Marcus L.</h3>
-                    <small class="text-muted">Crepes Enthusiast</small>
-                </div>
-            </div>
-        </div>
-        
-    </div>
-</section>
 
-<footer class="container-fluid">
+                <div id="loading-msg">Loading CSV data and building charts...</div>
+
+                <div id="charts-container" style="display:none;">
+
+                    <!-- Chart 1: Rating vs Order ID -->
+                    <div class="chart-card">
+                        <h5>Chart 1 — Rating vs Order ID</h5>
+                        <p class="chart-desc">
+                            Shows how customer ratings are distributed across orders.
+                            Missing "Not given" ratings are replaced with the <strong>mean rating</strong> (mean imputation).
+                            The red line is the linear regression trend.
+                        </p>
+                        <canvas id="chart1" height="100"></canvas>
+                        <div class="prediction-box" id="pred1"></div>
+                    </div>
+
+                    <!-- Chart 2: Food Prep Time vs Delivery Time -->
+                    <div class="chart-card">
+                        <h5>Chart 2 — Food Preparation Time vs Delivery Time</h5>
+                        <p class="chart-desc">
+                            Explores whether longer food preparation times correlate with longer delivery times.
+                            All values are numeric so no imputation is needed here.
+                            The red line is the linear regression trend.
+                        </p>
+                        <canvas id="chart2" height="100"></canvas>
+                        <div class="prediction-box" id="pred2"></div>
+                    </div>
+
+                    <!-- Chart 3: Restaurant Name vs Cost -->
+                    <div class="chart-card">
+                        <h5>Chart 3 — Restaurant Name vs Average Cost of Order</h5>
+                        <p class="chart-desc">
+                            Compares the average order cost per restaurant. Restaurants are encoded as numbers for regression.
+                            The red line is the linear regression trend.
+                        </p>
+                        <canvas id="chart3" height="120"></canvas>
+                        <div class="prediction-box" id="pred3"></div>
+                    </div>
+
+                </div><!-- /charts-container -->
+            </div><!-- /dashboard-collapse -->
+        </div>
+    </section>
+
+    <!-- ── Footer ──────────────────────────────────── -->
+    <footer class="container-fluid">
         <div class="d-flex justify-content-center">
             <div>
                 <hr>
@@ -150,10 +270,11 @@
                 <hr>
             </div>
         </div>
-        
     </footer>
-        <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
-        integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
+
+    <!-- ── Bootstrap JS ────────────────────────────── -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"
+        integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4="
         crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
         integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
@@ -161,5 +282,41 @@
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
         integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
         crossorigin="anonymous"></script>
+
+    <!-- ── jQuery Dashboard Toggle ─────────────────── -->
+    <script>
+        $(document).ready(function () {
+            var chartsLoaded = false;
+
+            $('#dashboard-toggle-btn').on('click', function () {
+                var $btn    = $(this);
+                var $panel  = $('#dashboard-collapse');
+                var isOpen  = $btn.hasClass('open');
+
+                if (isOpen) {
+                    // Slide up (close)
+                    $panel.slideUp(400, function () {
+                        $btn.removeClass('open');
+                        $btn.find('.btn-label').text('View Order Analytics');
+                    });
+                } else {
+                    // Slide down (open)
+                    $panel.slideDown(500, function () {
+                        $btn.addClass('open');
+                        $btn.find('.btn-label').text('Hide Analytics');
+                    });
+
+                    // Scroll smoothly to the panel on first open
+                    if (!chartsLoaded) {
+                        chartsLoaded = true;
+                    }
+                    $('html, body').animate({
+                        scrollTop: $panel.offset().top - 80
+                    }, 600);
+                }
+            });
+        });
+    </script>
+
 </body>
 </html>

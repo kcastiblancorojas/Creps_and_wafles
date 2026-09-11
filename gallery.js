@@ -82,7 +82,7 @@ let imgCaptions = [
             // Add Favorite Button
             let favBtn = document.createElement("button");
             favBtn.className = "btn-fav";
-            favBtn.textContent = "❤ Add to Favorites";
+            favBtn.textContent = "â¤ Add to Favorites";
             favBtn.onclick = () => {
                 addToTray(this.src);
                 document.body.removeChild(overlay);
@@ -117,7 +117,7 @@ let imgCaptions = [
 
             const pill = document.createElement('div');
             pill.className = 'fav-pill';
-            pill.innerHTML = `<img src="${src}"><div class="remove-dot">×</div>`;
+            pill.innerHTML = `<img src="${src}"><div class="remove-dot">Ã—</div>`;
             pill.querySelector('.remove-dot').onclick = () => pill.remove();
             
             tray.appendChild(pill);

@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="styles/bootstrap.css">
+    <link rel="stylesheet" href="styles/style.css">
+    <link rel="stylesheet" href="styles/member.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Indie+Flower&display=swap" rel="stylesheet">
+    <title>Crepes & Waffles — Welcome, Member!</title>
+    <style>
+        /* ── Confirmation card ───────────────────────── */
+        .confirm-card {
+            background: #ffffff;
+            border: 1px solid #d6be96;
+            border-radius: 18px;
+            box-shadow:
+                0 4px 6px rgba(74,44,10,0.08),
+                0 12px 32px rgba(74,44,10,0.07);
+            max-width: 620px;
+            margin: 48px auto;
+            padding: 40px 44px;
+            animation: fadeUp 0.5s ease both;
+        }
+
+        @keyframes fadeUp {
+            from { opacity: 0; transform: translateY(24px); }
+            to   { opacity: 1; transform: translateY(0); }
+        }
+
+        /* ── Success badge ───────────────────────────── */
+        .success-badge {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            background: #f5ede0;
+            border: 1.5px solid #d6be96;
+            border-radius: 50px;
+            padding: 10px 22px;
+            width: fit-content;
+            margin: 0 auto 28px;
+        }
+
+        .success-badge .check {
+            width: 28px;
+            height: 28px;
+            background: #AC9359;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1rem;
+            flex-shrink: 0;
+        }
+
+        .success-badge span {
+            font-family: 'Indie Flower', cursive;
+            color: #4a2c0a;
+            font-size: 1.05rem;
+        }
+
+        /* ── Card heading ────────────────────────────── */
+        .confirm-card h3 {
+            font-family: 'Indie Flower', cursive;
+            font-size: 1.2rem;
+            color: #AC9359;
+            border-bottom: 2px solid #f0e0c0;
+            padding-bottom: 8px;
+            margin: 0 0 20px;
+        }
+
+        /* ── prefTable ───────────────────────────────── */
+        #prefTable {
+            width: 100%;
+            border-collapse: collapse;
+            font-family: 'Indie Flower', cursive;
+        }
+
+        #prefTable tr {
+            border-bottom: 1px solid #f0e0c0;
+            transition: background 0.15s;
+        }
+
+        #prefTable tr:last-child {
+            border-bottom: none;
+        }
+
+        #prefTable tr:hover {
+            background: #fdfaf4;
+        }
+
+        #prefTable td {
+            padding: 11px 14px;
+            font-size: 1rem;
+            vertical-align: middle;
+        }
+
+        /* key column */
+        #prefTable td:first-child {
+            color: #AC9359;
+            font-weight: bold;
+            width: 38%;
+            text-transform: capitalize;
+        }
+
+        /* value column */
+        #prefTable td:last-child {
+            color: #4a2c0a;
+        }
+
+        /* null / empty values */
+        #prefTable td.empty-val {
+            color: #c9b48a;
+            font-style: italic;
+        }
+
+        /* ── Divider ─────────────────────────────────── */
+        .confirm-divider {
+            border: none;
+            height: 2px;
+            background: #f0e0c0;
+            margin: 28px 0;
+        }
+
+        /* ── Back link ───────────────────────────────── */
+        .back-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            font-family: 'Indie Flower', cursive;
+            font-size: 1rem;
+            color: #AC9359;
+            text-decoration: none;
+            border: 1.5px solid #d6be96;
+            border-radius: 50px;
+            padding: 8px 20px;
+            transition: background 0.2s, border-color 0.2s;
+            margin-top: 4px;
+        }
+
+        .back-link:hover {
+            background: #f5ede0;
+            border-color: #AC9359;
+            color: #4a2c0a;
+        }
+
+        /* ── No-data notice ──────────────────────────── */
+        .no-data {
+            text-align: center;
+            font-family: 'Indie Flower', cursive;
+            color: #b0946a;
+            font-size: 1rem;
+            padding: 20px 0 8px;
+        }
+    </style>
+</head>
+<body>
+
+    <nav class="navbar navbar-expand-md navbar-light bg-light px-xl-5 px-2">
+        <a class="navbar-brand" href="index.html">
+            <img src="images/crepes_logo.png" alt="logo" width="140" height="110">
+            <span><b> Crepes & Waffles</b></span>
+        </a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse justify-content-xl-end" id="navbarSupportedContent">
+            <div class="nav-item"><a class="nav-link" href="index.html">Home</a></div>
+            <div class="nav-item"><a class="nav-link" href="about.html">About</a></div>
+            <div class="nav-item dropdown">
+                <a class="nav-link" href="#">Menu ▾</a>
+                <div class="dropdown-menu">
+                    <a class="dropdown-item" href="calendar.html">Calendar</a>
+                    <a class="dropdown-item" href="gallery.html">Gallery</a>
+                    <a class="dropdown-item" href="menulist.html">Menu List</a>
+                    <a class="dropdown-item" href="game.html">Game</a>
+                </div>
+            </div>
+            <div class="nav-item"><a class="nav-link" href="order.html">Order</a></div>
+            <div class="nav-item"><a class="nav-link" href="location.html">Location</a></div>
+            <div class="nav-item"><a class="nav-link" href="contact.html">Contact Us</a></div>
+            <div class="nav-item"><a class="nav-link" href="credits.html">Credits</a></div>
+            <div class="nav-item"><a class="nav-link" href="member.html">Member</a></div>
+        </div>
+    </nav>
+
+    <!-- Banner reuses your existing member-banner styles -->
+    <div class="member-banner">
+        <h2>Welcome to the Family! 🎉</h2>
+        <p class="banner-sub">Your membership has been saved successfully.</p>
+        <div class="gold-rule">
+            <span></span>
+            <em>✦</em>
+            <span></span>
+        </div>
+    </div>
+
+    <div class="confirm-card">
+
+        <div class="success-badge">
+            <div class="check">✓</div>
+            <span>Registration complete — data stored in Local Storage</span>
+        </div>
+
+        <h3>Saved Preferences</h3>
+
+        <!-- Professor's exact code reads from localStorage and builds this table -->
+        <table id="prefTable"></table>
+
+        <hr class="confirm-divider">
+
+        <a class="back-link" href="member.html">← Back to registration</a>
+
+    </div>
+
+    <footer class="container-fluid">
+        <div class="d-flex justify-content-center">
+            <div>
+                <hr>
+                &#169;&nbsp;&nbsp;Copyright Lorena Castiblanco Student#: 301510102 - COMP125 - Winter 2026
+                <hr>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        "use strict";
+
+        // Professor's exact code — reads from localStorage and builds the table
+        let keys = ["firstName", "lastName", "address", "city", "postalCode",
+                    "province", "age", "email", "password", "confirmPassword"];
+
+        for (let item of keys) {
+            let newRow = document.createElement("tr");
+
+            let keyCell = document.createElement("td");
+            keyCell.textContent = item;
+            newRow.appendChild(keyCell);
+
+            let keyValue = document.createElement("td");
+            let stored = localStorage.getItem(item);
+
+            // Hide password values for security; show (not saved) if null
+            if (item === "password" || item === "confirmPassword") {
+                keyValue.textContent = stored ? "••••••••" : "(not saved)";
+                keyValue.classList.add("empty-val");
+            } else if (stored === null || stored === "") {
+                keyValue.textContent = "(not saved)";
+                keyValue.classList.add("empty-val");
+            } else {
+                keyValue.textContent = stored;
+            }
+
+            newRow.appendChild(keyValue);
+            document.getElementById("prefTable").appendChild(newRow);
+        }
+
+        // If nothing is in localStorage at all, show a helpful notice
+        if (localStorage.length === 0) {
+            let notice = document.createElement("p");
+            notice.className = "no-data";
+            notice.textContent = "No data found. Please fill out the registration form first.";
+            document.getElementById("prefTable").insertAdjacentElement("afterend", notice);
+        }
+    </script>
+
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
+        integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
+        crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
+        integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+        crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
+        integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+        crossorigin="anonymous"></script>
+</body>
+</html>

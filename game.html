@@ -1,0 +1,705 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BUG SMASHER 🪲</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&family=VT323:wght@400&display=swap');
+
+  :root {
+    --green: #39ff14;
+    --yellow: #ffe600;
+    --red: #ff2244;
+    --dark: #0a0a0f;
+    --panel: #11131a;
+    --border: #2a2d3e;
+    --glow-green: 0 0 8px #39ff14, 0 0 20px #39ff1466;
+    --glow-yellow: 0 0 8px #ffe600, 0 0 20px #ffe60066;
+    --glow-red: 0 0 8px #ff2244, 0 0 20px #ff224466;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--dark);
+    color: var(--green);
+    font-family: 'Press Start 2P', monospace;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    overflow-x: hidden;
+  }
+
+  /* Scanline overlay */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background: repeating-linear-gradient(
+      to bottom,
+      transparent 0px,
+      transparent 3px,
+      rgba(0,0,0,0.08) 3px,
+      rgba(0,0,0,0.08) 4px
+    );
+    pointer-events: none;
+    z-index: 1000;
+  }
+
+  /* CRT vignette */
+  body::after {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background: radial-gradient(ellipse at center, transparent 60%, rgba(0,0,0,0.7) 100%);
+    pointer-events: none;
+    z-index: 999;
+  }
+
+  header {
+    text-align: center;
+    padding: 28px 20px 12px;
+  }
+
+  h1 {
+    font-size: clamp(1.4rem, 4vw, 2.4rem);
+    color: var(--yellow);
+    text-shadow: var(--glow-yellow);
+    letter-spacing: 4px;
+    animation: flicker 4s infinite;
+  }
+
+  .subtitle {
+    font-family: 'VT323', monospace;
+    font-size: 1.2rem;
+    color: #888;
+    margin-top: 6px;
+    letter-spacing: 2px;
+  }
+
+  @keyframes flicker {
+    0%, 95%, 100% { opacity: 1; }
+    96% { opacity: 0.7; }
+    97% { opacity: 1; }
+    98% { opacity: 0.5; }
+    99% { opacity: 1; }
+  }
+
+  .game-wrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 16px;
+    padding: 0 16px 32px;
+    width: 100%;
+    max-width: 680px;
+  }
+
+  /* HUD */
+  .hud {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    background: var(--panel);
+    border: 2px solid var(--border);
+    border-radius: 4px;
+    padding: 10px 18px;
+    gap: 12px;
+  }
+
+  .stat {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+  }
+
+  .stat-label {
+    font-size: 0.45rem;
+    color: #555;
+    letter-spacing: 2px;
+  }
+
+  .stat-value {
+    font-size: clamp(1rem, 3vw, 1.5rem);
+    color: var(--green);
+    text-shadow: var(--glow-green);
+  }
+
+  #speed-value {
+    color: var(--yellow);
+    text-shadow: var(--glow-yellow);
+  }
+
+  /* Canvas */
+  .canvas-container {
+    position: relative;
+    border: 3px solid var(--green);
+    border-radius: 4px;
+    box-shadow: var(--glow-green), inset 0 0 40px rgba(0,0,0,0.8);
+    cursor: crosshair;
+    overflow: hidden;
+    width: 100%;
+  }
+
+  canvas {
+    display: block;
+    width: 100%;
+    height: auto;
+    background: #060810;
+    image-rendering: pixelated;
+  }
+
+  /* Smash flash overlay */
+  #flash {
+    position: absolute;
+    inset: 0;
+    background: var(--yellow);
+    opacity: 0;
+    pointer-events: none;
+    border-radius: 2px;
+    transition: opacity 0.05s;
+  }
+
+  #flash.hit { opacity: 0.15; }
+
+  /* Miss indicator */
+  .miss-text {
+    position: absolute;
+    font-size: 0.7rem;
+    color: var(--red);
+    text-shadow: var(--glow-red);
+    pointer-events: none;
+    animation: floatUp 0.7s ease-out forwards;
+    font-family: 'VT323', monospace;
+    font-size: 1.4rem;
+    letter-spacing: 2px;
+  }
+
+  .hit-text {
+    position: absolute;
+    color: var(--yellow);
+    text-shadow: var(--glow-yellow);
+    pointer-events: none;
+    animation: floatUp 0.7s ease-out forwards;
+    font-family: 'VT323', monospace;
+    font-size: 1.6rem;
+    letter-spacing: 2px;
+  }
+
+  @keyframes floatUp {
+    0%   { opacity: 1; transform: translateY(0) scale(1); }
+    100% { opacity: 0; transform: translateY(-40px) scale(0.8); }
+  }
+
+  /* Buttons */
+  .controls {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+    justify-content: center;
+    width: 100%;
+  }
+
+  button {
+    font-family: 'Press Start 2P', monospace;
+    font-size: 0.5rem;
+    letter-spacing: 1px;
+    padding: 10px 14px;
+    border-radius: 3px;
+    border: 2px solid;
+    cursor: pointer;
+    transition: transform 0.07s, box-shadow 0.07s;
+    flex: 1;
+    min-width: 130px;
+    max-width: 200px;
+  }
+
+  button:active { transform: scale(0.95); }
+
+  #btn-speed {
+    background: #0a1a0a;
+    border-color: var(--green);
+    color: var(--green);
+    box-shadow: var(--glow-green);
+  }
+  #btn-speed:hover { background: #0f2b0f; }
+
+  #btn-score {
+    background: #1a0a0a;
+    border-color: var(--red);
+    color: var(--red);
+    box-shadow: var(--glow-red);
+  }
+  #btn-score:hover { background: #2b0f0f; }
+
+  #btn-pause {
+    background: #1a130a;
+    border-color: var(--yellow);
+    color: var(--yellow);
+    box-shadow: var(--glow-yellow);
+  }
+  #btn-pause:hover { background: #2b1f0f; }
+
+  .instructions {
+    font-family: 'VT323', monospace;
+    font-size: 1rem;
+    color: #444;
+    text-align: center;
+    letter-spacing: 1px;
+    line-height: 1.6;
+  }
+
+  /* Pause overlay */
+  #pause-overlay {
+    display: none;
+    position: absolute;
+    inset: 0;
+    background: rgba(0,0,0,0.82);
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    gap: 16px;
+  }
+  #pause-overlay.active { display: flex; }
+  #pause-overlay h2 {
+    color: var(--yellow);
+    text-shadow: var(--glow-yellow);
+    font-size: clamp(1rem, 4vw, 1.8rem);
+    animation: flicker 3s infinite;
+  }
+  #pause-overlay p {
+    font-family: 'VT323', monospace;
+    color: #888;
+    font-size: 1.2rem;
+    letter-spacing: 2px;
+  }
+</style>
+</head>
+<body>
+
+        <nav class="navbar navbar-expand-md navbar-light bg-light px-xl-5 px-2">
+        <a class="navbar-brand" href="index.html">
+            <img src="images/crepes_logo.png" alt="logo" width="140" height="110">
+            <span><b> Crepes & Waffles</b></span>
+        </a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse justify-content-xl-end" id="navbarSupportedContent">
+            <div class="nav-item"><a class="nav-link" href="index.html">Home</a></div>
+            <div class="nav-item"><a class="nav-link" href="about.html">About</a></div>
+            <div class="nav-item dropdown">
+                <a class="nav-link" href="#">Menu ▾</a>
+                <div class="dropdown-menu">
+                    <a class="dropdown-item" href="calendar.html">Calendar</a>
+                    <a class="dropdown-item" href="gallery.html">Gallery</a>
+                    <a class="dropdown-item" href="menulist.html">Menu List</a>
+                    <a class="dropdown-item" href="game.html">Game</a>
+                </div>
+            </div>
+            <div class="nav-item"><a class="nav-link" href="order.html">Order</a></div>
+            <div class="nav-item"><a class="nav-link" href="location.html">Location</a></div>
+            <div class="nav-item"><a class="nav-link" href="contact.html">Contact Us</a></div>
+            <div class="nav-item"><a class="nav-link" href="credits.html">Credits</a></div>
+            <div class="nav-item"><a class="nav-link" href="member.html">Member</a></div>
+        </div>
+    </nav>
+
+<header>
+  <h1>🪲 BUG SMASHER</h1>
+  <div class="subtitle">CLICK · TAP · SMASH</div>
+</header>
+
+<div class="game-wrapper">
+
+  <!-- HUD -->
+  <div class="hud">
+    <div class="stat">
+      <div class="stat-label">SCORE</div>
+      <div class="stat-value" id="score-display">0</div>
+    </div>
+    <div class="stat">
+      <div class="stat-label">BEST</div>
+      <div class="stat-value" id="best-display">0</div>
+    </div>
+    <div class="stat">
+      <div class="stat-label">SPEED</div>
+      <div class="stat-value" id="speed-value">1.0x</div>
+    </div>
+    <div class="stat">
+      <div class="stat-label">INTERVAL</div>
+      <div class="stat-value" id="interval-display">1200ms</div>
+    </div>
+  </div>
+
+  <!-- Canvas -->
+  <div class="canvas-container" id="canvas-container">
+    <canvas id="gameCanvas" width="600" height="380"></canvas>
+    <div id="flash"></div>
+    <div id="pause-overlay">
+      <h2>⏸ PAUSED</h2>
+      <p>CLICK RESUME TO CONTINUE</p>
+    </div>
+  </div>
+
+  <!-- Buttons -->
+  <div class="controls">
+    <button id="btn-speed">⚡ RESET SPEED</button>
+    <button id="btn-pause">⏸ PAUSE</button>
+    <button id="btn-score">🔄 RESET SCORE</button>
+  </div>
+
+  <div class="instructions">
+    CLICK / TAP THE BUG TO SMASH IT · EACH HIT SPEEDS IT UP
+  </div>
+
+</div>
+
+<script>
+const canvas = document.getElementById('gameCanvas');
+const ctx = canvas.getContext('2d');
+const W = canvas.width;
+const H = canvas.height;
+
+// ── State ──────────────────────────────────────────────────────────────
+const INITIAL_INTERVAL = 1200;
+const MIN_INTERVAL     = 150;
+const SPEED_STEP       = 60;
+const BUG_RADIUS       = 26;
+
+let score        = 0;
+let best         = parseInt(localStorage.getItem('bugBest') || '0');
+let interval     = INITIAL_INTERVAL;
+let hopTimer     = null;
+let paused       = false;
+let bugX         = W / 2;
+let bugY         = H / 2;
+let bugAngle     = 0;       // for wobble animation
+let legPhase     = 0;
+let particles    = [];
+
+// ── DOM refs ──────────────────────────────────────────────────────────
+const scoreDisplay    = document.getElementById('score-display');
+const bestDisplay     = document.getElementById('best-display');
+const speedDisplay    = document.getElementById('speed-value');
+const intervalDisplay = document.getElementById('interval-display');
+const flash           = document.getElementById('flash');
+const pauseOverlay    = document.getElementById('pause-overlay');
+const container       = document.getElementById('canvas-container');
+const btnSpeed        = document.getElementById('btn-speed');
+const btnPause        = document.getElementById('btn-pause');
+const btnScore        = document.getElementById('btn-score');
+
+// ── Grid dots (background) ──────────────────────────────────────────
+const GRID_DOTS = [];
+for (let x = 20; x < W; x += 28)
+  for (let y = 20; y < H; y += 28)
+    GRID_DOTS.push({ x, y });
+
+// ── Particle system ───────────────────────────────────────────────────
+function spawnParticles(x, y) {
+  const colors = ['#ffe600','#ff2244','#39ff14','#ffffff'];
+  for (let i = 0; i < 18; i++) {
+    const angle = Math.random() * Math.PI * 2;
+    const speed = 1.5 + Math.random() * 4;
+    particles.push({
+      x, y,
+      vx: Math.cos(angle) * speed,
+      vy: Math.sin(angle) * speed,
+      life: 1,
+      decay: 0.03 + Math.random() * 0.04,
+      r: 2 + Math.random() * 4,
+      color: colors[Math.floor(Math.random() * colors.length)]
+    });
+  }
+}
+
+// ── Bug drawing ───────────────────────────────────────────────────────
+function drawBug(x, y, wobble, legP) {
+  ctx.save();
+  ctx.translate(x, y);
+  ctx.rotate(wobble);
+
+  // Shadow
+  ctx.beginPath();
+  ctx.ellipse(3, 6, BUG_RADIUS * 0.9, 6, 0, 0, Math.PI * 2);
+  ctx.fillStyle = 'rgba(0,0,0,0.35)';
+  ctx.fill();
+
+  // LEGS (3 per side)
+  const legAngles = [-0.4, 0, 0.4];
+  const legWave   = Math.sin(legP) * 5;
+  legAngles.forEach((a, i) => {
+    const flip = (i % 2 === 0) ? 1 : -1;
+    const wave = (i === 1) ? -legWave : legWave;
+    for (let side of [-1, 1]) {
+      ctx.save();
+      ctx.rotate(a * side);
+      ctx.strokeStyle = '#1a3a0a';
+      ctx.lineWidth = 2.5;
+      ctx.lineCap = 'round';
+      ctx.beginPath();
+      ctx.moveTo(side * 12, 0);
+      ctx.lineTo(side * 24 + wave * side, 10 + Math.abs(wave) * 0.3);
+      ctx.stroke();
+      ctx.restore();
+    }
+  });
+
+  // Body (main ellipse – shiny green carapace)
+  const grad = ctx.createRadialGradient(-6, -8, 2, 0, 0, BUG_RADIUS);
+  grad.addColorStop(0, '#88ff55');
+  grad.addColorStop(0.4, '#33aa11');
+  grad.addColorStop(1, '#0d4400');
+  ctx.beginPath();
+  ctx.ellipse(0, 2, BUG_RADIUS - 4, BUG_RADIUS, 0, 0, Math.PI * 2);
+  ctx.fillStyle = grad;
+  ctx.fill();
+  ctx.strokeStyle = '#1a5500';
+  ctx.lineWidth = 1.5;
+  ctx.stroke();
+
+  // Wing split line
+  ctx.beginPath();
+  ctx.moveTo(0, -BUG_RADIUS + 6);
+  ctx.lineTo(0, BUG_RADIUS - 4);
+  ctx.strokeStyle = '#1a5500';
+  ctx.lineWidth = 1.5;
+  ctx.stroke();
+
+  // Head
+  ctx.beginPath();
+  ctx.ellipse(0, -BUG_RADIUS + 4, 10, 10, 0, 0, Math.PI * 2);
+  const headGrad = ctx.createRadialGradient(-2, -BUG_RADIUS + 1, 1, 0, -BUG_RADIUS + 4, 10);
+  headGrad.addColorStop(0, '#99ff66');
+  headGrad.addColorStop(1, '#1a6600');
+  ctx.fillStyle = headGrad;
+  ctx.fill();
+  ctx.strokeStyle = '#1a5500';
+  ctx.lineWidth = 1.2;
+  ctx.stroke();
+
+  // Eyes
+  [[-4, -BUG_RADIUS + 1], [4, -BUG_RADIUS + 1]].forEach(([ex, ey]) => {
+    ctx.beginPath();
+    ctx.arc(ex, ey, 3, 0, Math.PI * 2);
+    ctx.fillStyle = '#ff3300';
+    ctx.fill();
+    ctx.beginPath();
+    ctx.arc(ex - 0.8, ey - 0.8, 1, 0, Math.PI * 2);
+    ctx.fillStyle = 'white';
+    ctx.fill();
+  });
+
+  // Antennae
+  for (let s of [-1, 1]) {
+    ctx.beginPath();
+    ctx.moveTo(s * 4, -BUG_RADIUS + 0);
+    ctx.quadraticCurveTo(s * 12, -BUG_RADIUS - 10, s * 10, -BUG_RADIUS - 20);
+    ctx.strokeStyle = '#1a5500';
+    ctx.lineWidth = 1.5;
+    ctx.stroke();
+    ctx.beginPath();
+    ctx.arc(s * 10, -BUG_RADIUS - 20, 2.5, 0, Math.PI * 2);
+    ctx.fillStyle = '#33aa11';
+    ctx.fill();
+  }
+
+  // Shine spots
+  ctx.beginPath();
+  ctx.ellipse(-6, -10, 5, 3, -0.5, 0, Math.PI * 2);
+  ctx.fillStyle = 'rgba(255,255,255,0.22)';
+  ctx.fill();
+
+  ctx.restore();
+}
+
+// ── Hop logic ─────────────────────────────────────────────────────────
+function hopBug() {
+  const margin = BUG_RADIUS + 10;
+  bugX = margin + Math.random() * (W - margin * 2);
+  bugY = margin + Math.random() * (H - margin * 2);
+}
+
+function startHopTimer() {
+  clearInterval(hopTimer);
+  hopTimer = setInterval(() => {
+    if (!paused) hopBug();
+  }, interval);
+}
+
+// ── Hit detection ─────────────────────────────────────────────────────
+function getCanvasXY(e) {
+  const rect = canvas.getBoundingClientRect();
+  const scaleX = W / rect.width;
+  const scaleY = H / rect.height;
+  let cx, cy;
+
+  if (e.touches && e.touches.length > 0) {
+    cx = (e.touches[0].clientX - rect.left) * scaleX;
+    cy = (e.touches[0].clientY - rect.top)  * scaleY;
+  } else if (e.changedTouches && e.changedTouches.length > 0) {
+    cx = (e.changedTouches[0].clientX - rect.left) * scaleX;
+    cy = (e.changedTouches[0].clientY - rect.top)  * scaleY;
+  } else {
+    cx = (e.clientX - rect.left) * scaleX;
+    cy = (e.clientY - rect.top)  * scaleY;
+  }
+  return { x: cx, y: cy };
+}
+
+function handleSmash(e) {
+  e.preventDefault();
+  if (paused) return;
+
+  const { x, y } = getCanvasXY(e);
+  const dx = x - bugX, dy = y - bugY;
+  const dist = Math.sqrt(dx * dx + dy * dy);
+
+  if (dist < BUG_RADIUS + 10) {
+    // HIT!
+    score++;
+    if (score > best) {
+      best = score;
+      localStorage.setItem('bugBest', best);
+    }
+    interval = Math.max(MIN_INTERVAL, interval - SPEED_STEP);
+    startHopTimer();
+    hopBug();
+    spawnParticles(bugX, bugY);
+    showFloating(bugX, bugY, '+1 SMASH!', 'hit-text');
+    flashScreen();
+    updateHUD();
+  } else {
+    // MISS
+    showFloating(x, y, 'MISS!', 'miss-text');
+  }
+}
+
+// ── Flash ─────────────────────────────────────────────────────────────
+function flashScreen() {
+  flash.classList.add('hit');
+  setTimeout(() => flash.classList.remove('hit'), 80);
+}
+
+// ── Floating text ─────────────────────────────────────────────────────
+function showFloating(x, y, text, cls) {
+  const rect = container.getBoundingClientRect();
+  const cRect = canvas.getBoundingClientRect();
+  const scaleX = cRect.width / W;
+  const scaleY = cRect.height / H;
+
+  const el = document.createElement('div');
+  el.className = cls;
+  el.textContent = text;
+  el.style.left = (cRect.left - rect.left + x * scaleX - 30) + 'px';
+  el.style.top  = (cRect.top  - rect.top  + y * scaleY - 20) + 'px';
+  container.appendChild(el);
+  setTimeout(() => el.remove(), 750);
+}
+
+// ── HUD update ─────────────────────────────────────────────────────────
+function updateHUD() {
+  scoreDisplay.textContent    = score;
+  bestDisplay.textContent     = best;
+  intervalDisplay.textContent = interval + 'ms';
+  const mult = (INITIAL_INTERVAL / interval).toFixed(1);
+  speedDisplay.textContent    = mult + 'x';
+}
+
+// ── Buttons ───────────────────────────────────────────────────────────
+btnSpeed.addEventListener('click', () => {
+  interval = INITIAL_INTERVAL;
+  startHopTimer();
+  updateHUD();
+});
+
+btnScore.addEventListener('click', () => {
+  score = 0;
+  interval = INITIAL_INTERVAL;
+  startHopTimer();
+  hopBug();
+  updateHUD();
+});
+
+btnPause.addEventListener('click', () => {
+  paused = !paused;
+  pauseOverlay.classList.toggle('active', paused);
+  btnPause.textContent = paused ? '▶ RESUME' : '⏸ PAUSE';
+});
+
+// ── Events ─────────────────────────────────────────────────────────────
+canvas.addEventListener('click',      handleSmash, { passive: false });
+canvas.addEventListener('touchstart', handleSmash, { passive: false });
+canvas.addEventListener('pointerdown', e => {
+  if (e.pointerType !== 'mouse') return; // avoid double-fire with touch
+}, { passive: false });
+
+// ── Render loop ───────────────────────────────────────────────────────
+let last = 0;
+function render(ts) {
+  const dt = ts - last;
+  last = ts;
+
+  if (!paused) {
+    legPhase += dt * 0.008;
+    bugAngle  = Math.sin(ts * 0.003) * 0.12;
+  }
+
+  // Clear
+  ctx.clearRect(0, 0, W, H);
+
+  // Background
+  ctx.fillStyle = '#060810';
+  ctx.fillRect(0, 0, W, H);
+
+  // Grid dots
+  ctx.fillStyle = '#1a1d2a';
+  GRID_DOTS.forEach(d => {
+    ctx.beginPath();
+    ctx.arc(d.x, d.y, 1, 0, Math.PI * 2);
+    ctx.fill();
+  });
+
+  // Particles
+  particles = particles.filter(p => p.life > 0);
+  particles.forEach(p => {
+    p.x += p.vx;
+    p.y += p.vy;
+    p.vy += 0.15;
+    p.life -= p.decay;
+    ctx.globalAlpha = Math.max(0, p.life);
+    ctx.beginPath();
+    ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+    ctx.fillStyle = p.color;
+    ctx.fill();
+  });
+  ctx.globalAlpha = 1;
+
+  // Bug target ring (pulsing)
+  const pulse = 0.5 + 0.5 * Math.sin(ts * 0.004);
+  ctx.beginPath();
+  ctx.arc(bugX, bugY, BUG_RADIUS + 10 + pulse * 6, 0, Math.PI * 2);
+  ctx.strokeStyle = `rgba(57,255,20,${0.1 + pulse * 0.15})`;
+  ctx.lineWidth = 1.5;
+  ctx.stroke();
+
+  // Bug
+  drawBug(bugX, bugY, bugAngle, legPhase);
+
+  requestAnimationFrame(render);
+}
+
+// ── Init ──────────────────────────────────────────────────────────────
+updateHUD();
+hopBug();
+startHopTimer();
+requestAnimationFrame(render);
+</script>
+</body>
+</html>
