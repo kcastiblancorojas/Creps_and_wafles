@@ -1,5 +1,4 @@
-
-        /* --- 1. CSS: Estilos Generales --- */
+/* --- 1. CSS: Estilos Generales --- */
         :root {
             --primary:  #AC9359;
             --dark: #ffffff;
@@ -9,7 +8,7 @@
 
         header { padding: 40px 20px; text-align: center; }
 
-        /* --- 2. CSS: Cuadrícula de Imágenes --- */
+        /* --- 2. CSS: CuadrÃ­cula de ImÃ¡genes --- */
         #lbImages {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
@@ -70,7 +69,7 @@
         }
 
         .fav-pill {
-            position: relative; /* FUNDAMENTAL para que el botón no se mueva */
+            position: relative; /* FUNDAMENTAL para que el botÃ³n no se mueva */
             width: 80px; height: 80px;
         }
 
@@ -80,7 +79,7 @@
             border: 2px solid white;
         }
 
-        /* El botón que quieres que aparezca al pasar el mouse */
+        /* El botÃ³n que quieres que aparezca al pasar el mouse */
         .remove-dot {
             position: absolute;
             top: -8px; right: -8px;

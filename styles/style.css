@@ -804,3 +804,104 @@ hr {
     width: 100px;
     margin: 20px auto;
 }
+
+    /* weather
+    ──────────────────────────── */
+#weather-widget {
+    float: left; /* Sends it to the complete left */
+    margin: 15px 0 10px 40px; /* Aligns with your brand logo/text margin */
+    
+    /* Blurry Background Rectangle */
+    background: rgba(255, 255, 255, 0.4); 
+    backdrop-filter: blur(12px); 
+    -webkit-backdrop-filter: blur(12px);
+    
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    border-radius: 15px; /* Softer rounded corners */
+    
+    /* Force the Rectangle Shape */
+    width: 350px; /* Adjust this width to make it as long as you like */
+    padding: 12px 25px;
+    
+    color: #4a3728; /* Your brand brown */
+    font-family: 'Indie Flower', cursive; 
+    z-index: 1000;
+}
+
+#weather-content {
+    display: flex !important;
+    align-items: center;
+    justify-content: space-between; /* Spreads content across the rectangle */
+}
+
+#weather-icon img {
+    width: 45px;
+    filter: sepia(0.4) contrast(0.9);
+}
+
+/* Grouping text to stay together in the rectangle */
+#weather-info {
+    display: flex;
+    flex-direction: row; /* Layout text in a single line */
+    align-items: baseline;
+    gap: 15px;
+}
+
+#weather-city {
+    font-size: 25px;
+    font-weight: bold;
+}
+
+#weather-temp {
+    font-size: 25px;
+}
+
+#weather-desc {
+    font-size: 15px;
+    opacity: 0.7;
+    font-style: italic;
+}
+
+/* Make sure the clearfix is still there to prevent overlap */
+        /* ── Dashboard Section ──────────────────────────── */
+        #dashboard-section {
+            background-color: #faf8f4;
+            padding: 40px 20px;
+        }
+        #dashboard-section h2 {
+            color: #AC9359;
+        }
+        .chart-card {
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+            margin-bottom: 30px;
+        }
+        .chart-card h5 {
+            color: #AC9359;
+            margin-bottom: 4px;
+        }
+        .chart-card p.chart-desc {
+            font-size: 13px;
+            color: #888;
+            margin-bottom: 12px;
+        }
+        .prediction-box {
+            background: #f5f0e8;
+            border-left: 4px solid #AC9359;
+            padding: 10px 15px;
+            border-radius: 6px;
+            margin-top: 14px;
+            font-size: 14px;
+        }
+        .prediction-box span {
+            font-weight: bold;
+            color: #AC9359;
+        }
+        #loading-msg {
+            text-align: center;
+            padding: 40px;
+            color: #AC9359;
+            font-size: 18px;
+        }
